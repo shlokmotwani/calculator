@@ -149,15 +149,19 @@ function addEventListenersToButtons(parent){
         }
         else if(buttonText == "="){
             secondNum = outputField.value;
+
             console.log(`---------BEFORE = OPERATIONS--------------
             firstNum:  ${firstNum}
             secondNum:  ${secondNum}
             outputField.value: ${outputField.value}
             isOperatorPressed: ${isOperatorPressed}`);
+
             if(isOperatorPressed){
-                result = operate(firstNum, currentOperator, secondNum);
-                console.log("OPS RES = " + result);
+                
             }
+
+            result = operate(firstNum, currentOperator, secondNum);
+                console.log("OPS RES = " + result);
             isOperatorPressed = false;
             outputField.value = result;
 
@@ -171,10 +175,13 @@ function addEventListenersToButtons(parent){
             if(outputField.value == 0){
                 outputField.value = buttonText;
             }
+            else{
+                outputField.value += buttonText;
+            }
             if(isOperatorPressed){
                 outputField.value = buttonText;
+                isOperatorPressed = false;
             }
-            outputField.value = buttonText;
         }
     })
 }
