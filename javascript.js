@@ -1,25 +1,20 @@
 function add(a, b){
-    console.log("add function called");
     return +a + +b;
 }
 
 function subtract(a, b){
-    console.log("subtract function called");
     return +a - +b;
 }
 
 function multiply(a, b){
-    console.log("multiply function called");
     return +a * +b;
 }
 
 function divide(a, b){
-    console.log("divide function called");
     return +a / +b;
 }
 
 function operate(a, operator, b){
-    console.log("operate function called");
     let answer = 0;
     switch(operator){
         case "+":
@@ -127,8 +122,8 @@ function addEventListenersToButtons(parent){
         }
         
         if(buttonText == "CLEAR"){
-            firstNum = 0;
-            secondNum = 0;
+            firstNum = null;
+            secondNum = null;
             currentOperator = "";
             isOperatorPressed = false;
             result = 0;
@@ -140,36 +135,42 @@ function addEventListenersToButtons(parent){
             buttonText == "/"){
             
             isOperatorPressed = true;
-            firstNum = outputField.value;
+
+            if(firstNum && secondNum){
+                result = operate(firstNum, currentOperator, secondNum);
+                firstNum = result;
+                outputField.value = firstNum;
+                currentOperator = "";
+                isOperatorPressed = false;
+            }
+            else{
+                firstNum = outputField.value;
+            }
             currentOperator = buttonText;
-            console.log(`isOperatorPressed: ${isOperatorPressed}
+
+            /*console.log(`isOperatorPressed: ${isOperatorPressed}
             firstNum: ${firstNum}
-            secondNum: ${secondNum}`);
+            secondNum: ${secondNum}`);*/
             
         }
         else if(buttonText == "="){
             secondNum = outputField.value;
 
-            console.log(`---------BEFORE = OPERATIONS--------------
+            /*console.log(`---------BEFORE = OPERATIONS--------------
             firstNum:  ${firstNum}
             secondNum:  ${secondNum}
             outputField.value: ${outputField.value}
-            isOperatorPressed: ${isOperatorPressed}`);
-
-            if(isOperatorPressed){
-                
-            }
+            isOperatorPressed: ${isOperatorPressed}`);*/
 
             result = operate(firstNum, currentOperator, secondNum);
-                console.log("OPS RES = " + result);
             isOperatorPressed = false;
             outputField.value = result;
 
-            console.log(`---------AFTER = OPERATIONS--------------
+            /*console.log(`---------AFTER = OPERATIONS--------------
             firstNum:  ${firstNum}
             secondNum:  ${secondNum}
             outputField.value: ${outputField.value}
-            isOperatorPressed: ${isOperatorPressed}`);
+            isOperatorPressed: ${isOperatorPressed}`);*/
         }
         else{
             if(outputField.value == 0){
@@ -178,12 +179,13 @@ function addEventListenersToButtons(parent){
             else{
                 outputField.value += buttonText;
             }
+
             if(isOperatorPressed){
                 outputField.value = buttonText;
                 isOperatorPressed = false;
             }
         }
-    })
+    });
 }
 
 
