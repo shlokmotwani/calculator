@@ -1,19 +1,9 @@
-const outputField = document.querySelector("#output-field");
-const divButtons = document.querySelector("#buttons");
-const divDigits = document.querySelector("#digits");
-const divOperators = document.querySelector("#operators");
-const equalsButton = document.createElement("button");
-const op_symbols = ["+", "-", "*", "/", "CLEAR"];
-
-outputField.value = 0;
-equalsButton.textContent = "=";
-equalsButton.style.width = "93%";
-
-divOperators.setAttribute(
-  "style",
-  `display: flex;
-  flex-direction: column;`
-);
+let outputField;
+let divButtons;
+let divDigits;
+let divOperators;
+let equalsButton;
+let op_symbols;
 
 function add(a, b) {
   return +a + +b;
@@ -89,7 +79,30 @@ function createOperatorButtons(parent) {
   }
 }
 
+function setUpVariables() {
+  outputField = document.querySelector("#output-field");
+  divButtons = document.querySelector("#buttons");
+  divDigits = document.querySelector("#digits");
+  divOperators = document.querySelector("#operators");
+  equalsButton = document.createElement("button");
+  op_symbols = ["+", "-", "*", "/", "CLEAR"];
+
+  outputField.value = 0;
+  equalsButton.textContent = "=";
+  equalsButton.style.width = "93%";
+
+  divOperators.setAttribute(
+    "style",
+    `display: flex;
+    flex-direction: column;`
+  );
+}
+
 function runCalculator() {
+  setUpVariables();
+  createDigitButtons(divDigits);
+  createOperatorButtons(divOperators);
+  divDigits.appendChild(equalsButton);
   addEventListenersToButtons(divButtons);
 }
 
@@ -99,6 +112,7 @@ function addEventListenersToButtons(parent) {
   let currentOperator = "";
   let isOperatorPressed = false;
   let result = 0;
+  let isEqualsPressed = false;
 
   parent.addEventListener("click", (e) => {
     let buttonText = e.target.textContent;
@@ -116,12 +130,16 @@ function addEventListenersToButtons(parent) {
     } else if (op_symbols.includes(buttonText)) {
       if (!isOperatorPressed) {
         if (firstNum) {
-          secondNum = +outputField.value;
-          result = operate(firstNum, currentOperator, secondNum);
-          firstNum = result;
-          secondNum = null;
-          outputField.value = result;
-          currentOperator = "";
+          if (!isEqualsPressed) {
+            secondNum = +outputField.value;
+            result = operate(firstNum, currentOperator, secondNum);
+            firstNum = result;
+            secondNum = null;
+            outputField.value = result;
+            currentOperator = "";
+          } else {
+            currentOperator = buttonText;
+          }
         } else {
           firstNum = +outputField.value;
         }
@@ -129,14 +147,16 @@ function addEventListenersToButtons(parent) {
       isOperatorPressed = true;
       currentOperator = buttonText;
     } else if (buttonText == "=") {
-      secondNum = +outputField.value;
-
-      result = operate(firstNum, currentOperator, secondNum);
-      isOperatorPressed = false;
-      currentOperator = "";
-      outputField.value = result;
-      firstNum = secondNum;
-      secondNum = null;
+      if (!isEqualsPressed) {
+        isEqualsPressed = true;
+        secondNum = +outputField.value;
+        result = operate(firstNum, currentOperator, secondNum);
+        isOperatorPressed = false;
+        currentOperator = "";
+        outputField.value = result;
+        firstNum = result;
+        secondNum = null;
+      }
     } else {
       if (outputField.value == 0) {
         outputField.value = buttonText;
@@ -149,11 +169,10 @@ function addEventListenersToButtons(parent) {
         }
       }
     }
+    if (buttonText != "=") {
+      isEqualsPressed = false;
+    }
   });
 }
-
-createDigitButtons(divDigits);
-createOperatorButtons(divOperators);
-divDigits.appendChild(equalsButton);
 
 runCalculator();
