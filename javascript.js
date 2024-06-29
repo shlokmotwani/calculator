@@ -22,22 +22,16 @@ function divide(a, b) {
 }
 
 function operate(a, operator, b) {
-  let answer = 0;
   switch (operator) {
     case "+":
-      answer = add(a, b);
-      break;
+      return add(a, b);
     case "-":
-      answer = subtract(a, b);
-      break;
+      return subtract(a, b);
     case "*":
-      answer = multiply(a, b);
-      break;
+      return multiply(a, b);
     case "/":
-      answer = divide(a, b);
-      break;
+      return divide(a, b);
   }
-  return answer;
 }
 
 function createDigitButtons(parent) {
